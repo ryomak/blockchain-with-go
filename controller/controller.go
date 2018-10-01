@@ -37,7 +37,7 @@ func NewTransactionController(c echo.Context) error {
 	}
 	index := bc.NewTransaction(p.Sender, p.Recipient, p.Amount)
 	return c.JSON(http.StatusCreated, map[string]string{
-		"message": "トランザクションはブロック" + strconv.Itoa(index) + "に追加されました",
+		"message": "added Transaction to Block" + strconv.Itoa(index),
 	})
 }
 
@@ -61,10 +61,14 @@ func RegisterNodeController(c echo.Context) error {
 		})
 	}
 	for _, node := range p.Nodes {
-		bc.RegisterNode(node)
+		if err := bc.RegisterNode(node);err != nil{
+			return c.JSON(http.StatusBadRequest, map[string]string{
+				"message": err.Error(),
+			})
+		}
 	}
 	return c.JSON(http.StatusCreated, map[string]interface{}{
-		"message": "ノードが追加されました",
+		"message": "register nodes",
 		"nodes":   bc.Nodes,
 	})
 }
@@ -77,9 +81,9 @@ func ConsensusController(c echo.Context) error {
 	bc := middleware.GetBlockchain(c)
 	res := new(response)
 	if bc.ResolveConflicts() {
-		res.Message = "チェーンが更新されました"
+		res.Message = "updated chain"
 	} else {
-		res.Message = "チェーンが確認されました"
+		res.Message = "comfirmed chain"
 	}
 	res.Chain = bc.Chain
 	return c.JSON(http.StatusOK, res)

@@ -10,7 +10,7 @@ func InsertBlockchainMiddleware(bc *blockchain.Blockchain) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return echo.HandlerFunc(func(c echo.Context) error {
 			c.Set("BLOCKCHAIN", bc)
-			return nil
+			return next(c)
 		})
 	}
 }
@@ -19,7 +19,7 @@ func InsertIdentMiddleware(nodeIdent string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return echo.HandlerFunc(func(c echo.Context) error {
 			c.Set("IDENT", &nodeIdent)
-			return nil
+			return next(c)
 		})
 	}
 }

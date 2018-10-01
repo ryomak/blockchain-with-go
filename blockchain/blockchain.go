@@ -15,7 +15,7 @@ type FullChain struct {
 }
 
 type Blockchain struct {
-	Chain              []Block
+	Chain              []Block 
 	CurrentTransaction Transaction
 	Nodes              []string
 }
