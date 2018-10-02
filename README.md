@@ -1,7 +1,7 @@
 # blockchain-with-go
 referring to [it](https://hackernoon.com/learn-blockchains-by-building-one-117428612f46)
 
-## usage
+## Usage
 
 ### dependency
 ```
@@ -18,7 +18,7 @@ or
 go run main.go -p <port>
 ```
 
-## endpoint
+## Endpoint
 
 ### **GET**```/mine```  : current transaction to block (mining with proof of work by node )
 ### **POST** ```/transactions/new``` : make transaction 
