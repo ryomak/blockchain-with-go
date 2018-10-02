@@ -26,9 +26,6 @@ func (bc *Blockchain) ValidChain(chain []Block) bool {
 			return false
 		}
 		if !ValidProof(lastBlock.Proof, block.Proof, WORKLEVEL) {
-			guess := []byte(strconv.Itoa(lastBlock.Proof) + strconv.Itoa(block.Proof))
-			hashData := sha256.Sum256(guess)
-			guessHash := hex.EncodeToString(hashData[:])
 			return false
 		}
 		lastBlock = block
