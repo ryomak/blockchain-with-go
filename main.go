@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"log"
 	"strings"
 
 	"github.com/google/uuid"
@@ -19,8 +20,7 @@ var nodeIdentifire string
 
 func init() {
 	flag.Parse()
-	bc = new(blockchain.Blockchain)
-	bc.NewBlock(100, "1")
+	bc = blockchain.Init()
 }
 
 func main() {
@@ -34,8 +34,11 @@ func main() {
 	e.POST("/transactions/new", controller.NewTransactionController)
 	e.GET("/chain", controller.ChainController)
 
+	e.GET("/nodes/amount",controller.GetAmout)
+	e.GET("/nodes",controller.GetNodes)
 	e.POST("/nodes/register", controller.RegisterNodeController)
 	e.GET("/nodes/resolve", controller.ConsensusController)
 
+	log.Println("nodeIdent:", nodeIdentifire)
 	e.Start(":" + *port)
 }

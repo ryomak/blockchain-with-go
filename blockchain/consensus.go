@@ -25,7 +25,13 @@ func (bc *Blockchain) ValidChain(chain []Block) bool {
 		if block.PreviousHash != bc.Hash(lastBlock) {
 			return false
 		}
-		if !ValidProof(lastBlock.Proof, block.Proof, workLevel) {
+		if !ValidProof(lastBlock.Proof, block.Proof, WORKLEVEL) {
+			guess := []byte(strconv.Itoa(lastBlock.Proof) + strconv.Itoa(block.Proof))
+			hashData := sha256.Sum256(guess)
+			guessHash := hex.EncodeToString(hashData[:])
+			log.Println(guessHash)
+			log.Println(lastBlock.Proof)
+			log.Println(block.Proof)
 			return false
 		}
 		lastBlock = block
@@ -62,6 +68,7 @@ func (bc *Blockchain) ResolveConflicts() bool {
 			log.Println(err.Error())
 			continue
 		}
+		log.Println(fullChain.Length,":",maxLength,":",bc.ValidChain(fullChain.Chain))
 		if fullChain.Length > maxLength && bc.ValidChain(fullChain.Chain) {
 			maxLength = fullChain.Length
 			newChain = fullChain.Chain

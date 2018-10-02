@@ -16,13 +16,13 @@ type FullChain struct {
 
 type Blockchain struct {
 	Chain              []Block 
-	CurrentTransaction Transaction
+	CurrentTransactions []Transaction
 	Nodes              []string
 }
 type Block struct {
 	Index        int
 	Timestamp    int64
-	Transaction  Transaction
+	Transactions  []Transaction
 	Proof        int
 	PreviousHash string
 }
@@ -33,7 +33,13 @@ type Transaction struct {
 	Amount    int
 }
 
-var workLevel = 3
+var WORKLEVEL = 4
+
+func Init()*Blockchain{
+	bc := new(Blockchain)
+	bc.NewBlock(100, "1")
+	return bc
+}
 
 func (bc *Blockchain) NewBlock(proof int, previousHash ...string) Block {
 	var pg string
@@ -45,11 +51,11 @@ func (bc *Blockchain) NewBlock(proof int, previousHash ...string) Block {
 	block := Block{
 		Index:        (len(bc.Chain) + 1),
 		Timestamp:    time.Now().Unix(),
-		Transaction:  bc.CurrentTransaction,
+		Transactions:  bc.CurrentTransactions,
 		Proof:        proof,
 		PreviousHash: pg,
 	}
-	bc.CurrentTransaction = Transaction{}
+	bc.CurrentTransactions = []Transaction{}
 	bc.Chain = append(bc.Chain, block)
 	return block
 }
@@ -59,11 +65,14 @@ func (bc Blockchain) LastBlock() Block {
 }
 
 func (bc *Blockchain) NewTransaction(sender, recipient string, amount int) int {
-	bc.CurrentTransaction = Transaction{
+	if (bc.GetAmount(sender)-amount)<0 && sender != "0"/*minus amount  &&!genesis*/{
+		return 0
+	}
+	bc.CurrentTransactions = append(bc.CurrentTransactions,Transaction{
 		Sender:    sender,
 		Recipient: recipient,
 		Amount:    amount,
-	}
+	})
 	return bc.LastBlock().Index + 1
 }
 
@@ -89,3 +98,4 @@ func (bc *Blockchain) RegisterNode(address string) error {
 	bc.Nodes = append(bc.Nodes, address)
 	return nil
 }
+
