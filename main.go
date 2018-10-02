@@ -34,7 +34,8 @@ func main() {
 	e.POST("/transactions/new", controller.NewTransactionController)
 	e.GET("/chain", controller.ChainController)
 
-	e.GET("/nodes/amount",controller.GetAmout)
+	e.GET("/amount",controller.GetAmout)
+
 	e.GET("/nodes",controller.GetNodes)
 	e.POST("/nodes/register", controller.RegisterNodeController)
 	e.GET("/nodes/resolve", controller.ConsensusController)
